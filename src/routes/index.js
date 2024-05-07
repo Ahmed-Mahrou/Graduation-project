@@ -12,6 +12,7 @@ import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import SearchProduct from "../pages/SearchProduct";
 import SubCategoryProduct from "../pages/SubCategoryProduct";
+import Payment from "../pages/Payment";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <Cart />,
+      },
+      {
+        path: "payment",
+        element: <Payment />,
       },
       {
         path: "search",

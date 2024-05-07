@@ -3,12 +3,15 @@ import SummaryApi from "../common";
 import Context from "../context";
 import displayINRCurrency from "../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [cartId, setCartId] = useState("");
   const context = useContext(Context);
   const loadingCart = new Array(4).fill(null);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     setLoading(true);
@@ -21,10 +24,13 @@ const Cart = () => {
     });
 
     const responseData = await response.json();
+    
     setLoading(false);
-
+    console.log(responseData);
     if (responseData.data) {
       setData(responseData.data.cartItems);
+      setCartId(responseData.data._id);
+      console.log(cartId);
     }
     if (responseData.status === "fail") {
       setData([]);
@@ -112,7 +118,9 @@ const Cart = () => {
       context.fetchUserAddToCart();
     }
   }
-
+  const handlePayment = () => {
+      navigate(`/payment?cart=${cartId}`)
+  }
   const totalQty = data.reduce(
     (previousValue, currentValue) => previousValue + currentValue.quantity,
     0
@@ -221,9 +229,15 @@ const Cart = () => {
                 <p>{displayINRCurrency(totalPrice)}</p>
               </div>
 
-              <button className="bg-blue-600 p-2 text-white w-full mt-2">
-                Payment
-              </button>
+              {
+                  data.length > 0 &&
+                    <button onClick={() => handlePayment()} className="bg-blue-600 p-2 text-white w-full mt-2">
+                      Payment
+                  </button>
+                  
+                    
+                  
+              }
               <button
                 onClick={handleClearCart}
                 className=" bg-blue-600 p-2 text-white w-full mt-2"

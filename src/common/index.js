@@ -83,6 +83,15 @@ const SummaryApi = {
     url: `${backendDomin}/api/filter-product`,
     method: "post",
   },
+  createCheckoutSession: {
+    url: "https://reca.azurewebsites.net/api/v1/orders/checkout-session",
+    method: "post",
+  },
+  createCashOrder: {
+    url: "https://reca.azurewebsites.net/api/v1/orders",
+    method: "post",
+  }
+  
 };
 
 export default SummaryApi;
