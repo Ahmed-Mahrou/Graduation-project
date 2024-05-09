@@ -22,12 +22,23 @@ const AdminEditProduct = ({ onClose, productData, setFetchAgain }) => {
   // images: productData?.images || [],
   // imageCover: productData?.imageCover,
 
-  function objectToFormData(obj) {
-    const formData = new FormData();
+  function objectToFormData(obj, formData = new FormData(), parentKey = "") {
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        const value = obj[key];
+        const formKey = parentKey ? `${parentKey}[${key}]` : key;
 
-    Object.entries(obj).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+        if (typeof value === "object" && !Array.isArray(value)) {
+          objectToFormData(value, formData, formKey);
+        } else if (Array.isArray(value)) {
+          value.forEach((element) => {
+            formData.append(formKey, element);
+          });
+        } else {
+          formData.append(formKey, value);
+        }
+      }
+    }
 
     return formData;
   }

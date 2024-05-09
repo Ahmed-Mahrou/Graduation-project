@@ -1,42 +1,42 @@
 import React, { useEffect, useState } from "react";
-import UploadProduct from "../components/UploadProduct";
 import SummaryApi from "../common";
-import AdminProductCard from "../components/AdminProductCard";
+import AdminCategoryCard from "../components/AdminCategoryCard";
+import UploadCategory from "../components/UploadCategory";
 
-const AllProducts = () => {
-  const [openUploadProduct, setOpenUploadProduct] = useState(false);
-  const [allProduct, setAllProduct] = useState([]);
+function AllCategories() {
+  const [openUploadCategory, setOpenUploadCategory] = useState(false);
+  const [allCategory, setAllCategory] = useState([]);
   const [fetctAgain, setFetchAgain] = useState(false);
 
-  const fetchAllProduct = async () => {
-    const response = await fetch(SummaryApi.allProduct.url);
+  const fetchAllCategories = async () => {
+    const response = await fetch(SummaryApi.categoryProduct.url);
     const dataResponse = await response.json();
     setFetchAgain(false);
 
-    setAllProduct(dataResponse?.data || []);
+    setAllCategory(dataResponse?.data || []);
   };
 
   useEffect(() => {
-    fetchAllProduct();
+    fetchAllCategories();
   }, [fetctAgain]);
 
   return (
     <div>
       <div className="bg-white py-2 px-4 flex justify-between items-center">
-        <h2 className="font-bold text-lg">All Product</h2>
+        <h2 className="font-bold text-lg">All Category</h2>
         <button
           className="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all py-1 px-3 rounded-full "
-          onClick={() => setOpenUploadProduct(true)}
+          onClick={() => setOpenUploadCategory(true)}
         >
-          Upload Product
+          Upload Category
         </button>
       </div>
 
-      {/**all product */}
+      {/**all categories */}
       <div className="flex items-center flex-wrap gap-5 py-4 h-[calc(100vh-190px)] overflow-y-scroll">
-        {allProduct.map((product, index) => {
+        {allCategory.map((product, index) => {
           return (
-            <AdminProductCard
+            <AdminCategoryCard
               data={product}
               key={product?._id}
               setFetchAgain={setFetchAgain}
@@ -45,15 +45,15 @@ const AllProducts = () => {
         })}
       </div>
 
-      {/**upload prouct component */}
-      {openUploadProduct && (
-        <UploadProduct
-          onClose={() => setOpenUploadProduct(false)}
+      {/**upload category component */}
+      {openUploadCategory && (
+        <UploadCategory
+          onClose={() => setOpenUploadCategory(false)}
           setFetchAgain={setFetchAgain}
         />
       )}
     </div>
   );
-};
+}
 
-export default AllProducts;
+export default AllCategories;

@@ -13,6 +13,8 @@ import Cart from "../pages/Cart";
 import SearchProduct from "../pages/SearchProduct";
 import SubCategoryProduct from "../pages/SubCategoryProduct";
 import Payment from "../pages/Payment";
+import AllCategories from "../pages/AllCategories";
+import AllSubCategories from "../pages/AllSubCategories";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +72,14 @@ const router = createBrowserRouter([
           {
             path: "all-products",
             element: <AllProducts />,
+          },
+          {
+            path: "all-categories",
+            element: <AllCategories />,
+          },
+          {
+            path: "all-subcategories",
+            element: <AllSubCategories />,
           },
         ],
       },

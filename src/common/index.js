@@ -13,10 +13,7 @@ const SummaryApi = {
     url: "https://reca.azurewebsites.net/api/v1/users/getMe",
     method: "get",
   },
-  logout_user: {
-    url: `${backendDomin}/api/userLogout`,
-    method: "get",
-  },
+
   allUser: {
     url: "https://reca.azurewebsites.net/api/v1/users",
     method: "get",
@@ -26,7 +23,7 @@ const SummaryApi = {
     method: "put",
   },
   uploadProduct: {
-    url: "https://reca.azurewebsites.net/api/v1/subcategories",
+    url: "https://reca.azurewebsites.net/api/v1/products",
     method: "post",
   },
   allProduct: {
@@ -37,15 +34,47 @@ const SummaryApi = {
     url: "https://reca.azurewebsites.net/api/v1/products",
     method: "PUT",
   },
-  categoryProduct: {
-    url: "https://reca.azurewebsites.net/api/v1/categories",
-    method: "get",
+  deleteProduct: {
+    url: "https://reca.azurewebsites.net/api/v1/products",
+    method: "delete",
   },
-
   productDetails: {
     url: "https://reca.azurewebsites.net/api/v1/products",
     method: "get",
   },
+  categoryProduct: {
+    url: "https://reca.azurewebsites.net/api/v1/categories",
+    method: "get",
+  },
+  deleteCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/categories",
+    method: "delete",
+  },
+  uploadCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/categories",
+    method: "post",
+  },
+  updateCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/categories",
+    method: "put",
+  },
+  getAllSubCategories: {
+    url: "https://reca.azurewebsites.net/api/v1/subcategories",
+    method: "get",
+  },
+  createSubCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/subcategories",
+    method: "post",
+  },
+  deleteSubCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/subcategories",
+    method: "delete",
+  },
+  updateSubCategory: {
+    url: "https://reca.azurewebsites.net/api/v1/subcategories",
+    method: "put",
+  },
+
   addToCartProduct: {
     url: "https://reca.azurewebsites.net/api/v1/cart",
     method: "post",
@@ -70,10 +99,6 @@ const SummaryApi = {
     url: "https://reca.azurewebsites.net/api/v1/cart",
     method: "delete",
   },
-  getAllSubCategories: {
-    url: "https://reca.azurewebsites.net/api/v1/subcategories",
-    method: "get",
-  },
 
   searchProduct: {
     url: "https://reca.azurewebsites.net/api/v1/products",
@@ -90,8 +115,7 @@ const SummaryApi = {
   createCashOrder: {
     url: "https://reca.azurewebsites.net/api/v1/orders",
     method: "post",
-  }
-  
+  },
 };
 
 export default SummaryApi;

@@ -37,7 +37,7 @@ const SubCategoryCard = ({ loading, data = [] }) => {
                 <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                   <img
                     alt={product?.name}
-                    src="../assest/products/airpodes/boAt Airdopes 111 1.webp"
+                    src={product?.image}
                     className="object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply"
                   />
                 </div>

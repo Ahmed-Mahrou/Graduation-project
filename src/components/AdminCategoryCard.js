@@ -1,17 +1,16 @@
 import React, { useContext, useState } from "react";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
-import AdminEditProduct from "./AdminEditProduct";
-import displayINRCurrency from "../helpers/displayCurrency";
 import SummaryApi from "../common";
 import Context from "../context";
 import { toast } from "react-toastify";
+import AdminEditCategory from "./AdminEditCategory";
 
-const AdminProductCard = ({ data, setFetchAgain }) => {
-  const [editProduct, setEditProduct] = useState(false);
+function AdminCategoryCard({ data, setFetchAgain }) {
+  const [editCategory, setEditCategory] = useState(false);
   const context = useContext(Context);
-  const deleteProduct = async (id) => {
-    const response = await fetch(`${SummaryApi.deleteProduct.url}/${id}`, {
-      method: SummaryApi.deleteCartProduct.method,
+  const deleteCategory = async (id) => {
+    const response = await fetch(`${SummaryApi.deleteCategory.url}/${id}`, {
+      method: SummaryApi.deleteCategory.method,
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${context.token}`,
@@ -19,7 +18,7 @@ const AdminProductCard = ({ data, setFetchAgain }) => {
     });
 
     if (response.status === 204) {
-      toast.success("product deleted successfully");
+      toast.success("category deleted successfully");
       setFetchAgain(true);
     }
   };
@@ -29,28 +28,24 @@ const AdminProductCard = ({ data, setFetchAgain }) => {
       <div className="w-40">
         <div className="w-32 h-32 flex justify-center items-center">
           <img
-            src={data?.imageCover}
-            alt={data.title}
+            src={data?.image}
+            alt={data?.name}
             className="mx-auto object-fill h-full"
           />
         </div>
-        <h1 className="text-ellipsis line-clamp-2">{data.title}</h1>
+        <h1 className="text-ellipsis line-clamp-2">{data?.name}</h1>
 
         <div>
-          <p className="font-semibold">
-            {displayINRCurrency(data.priceAfterDiscount)}
-          </p>
-
           <div className=" flex justify-between">
             <div
               className="w-fit ml-auto p-2 bg-green-100 hover:bg-green-600 rounded-full hover:text-white cursor-pointer"
-              onClick={() => setEditProduct(true)}
+              onClick={() => setEditCategory(true)}
             >
               <MdModeEditOutline />
             </div>
             <div
               className="w-fit text-red-600 rounded-full p-2 hover:bg-red-600 hover:text-white cursor-pointer"
-              onClick={() => deleteProduct(data?._id)}
+              onClick={() => deleteCategory(data?._id)}
             >
               <MdDelete />
             </div>
@@ -58,15 +53,15 @@ const AdminProductCard = ({ data, setFetchAgain }) => {
         </div>
       </div>
 
-      {editProduct && (
-        <AdminEditProduct
-          productData={data}
-          onClose={() => setEditProduct(false)}
+      {editCategory && (
+        <AdminEditCategory
+          categoryData={data}
+          onClose={() => setEditCategory(false)}
           setFetchAgain={setFetchAgain}
         />
       )}
     </div>
   );
-};
+}
 
-export default AdminProductCard;
+export default AdminCategoryCard;

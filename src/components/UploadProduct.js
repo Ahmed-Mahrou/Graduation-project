@@ -1,25 +1,67 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
-import productCategory from "../helpers/productCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import uploadImage from "../helpers/uploadImage";
 import DisplayImage from "./DisplayImage";
 import { MdDelete } from "react-icons/md";
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
+import Context from "../context";
 
-const UploadProduct = ({ onClose, fetchData }) => {
+const UploadProduct = ({ onClose, setFetchAgain }) => {
   const [data, setData] = useState({
     title: "",
-    slug: "",
+    // slug: "",
     category: "",
+    subcategory: "",
     images: [],
+    imageCover: "",
     description: "",
     price: "",
     priceAfterDiscount: "",
+    quantity: "",
+    sold: "",
   });
+  const [imagesView, setImagesView] = useState([]);
+
+  const [categoryProduct, setCategoryProduct] = useState([]);
+  const [subCategoryProduct, setSubCategoryProduct] = useState([]);
+
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
+  const { token } = useContext(Context);
+
+  const formData = objectToFormData(data);
+
+  function objectToFormData(obj) {
+    const formData = new FormData();
+
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        const value = obj[key];
+        if (Array.isArray(value)) {
+          value.forEach((element) => {
+            formData.append(key, element);
+          });
+        } else {
+          formData.append(key, value);
+        }
+      }
+    }
+
+    return formData;
+  }
+
+  const fetchCategoryProduct = async () => {
+    const response = await fetch(SummaryApi.categoryProduct.url);
+    const dataResponse = await response.json();
+    setCategoryProduct(dataResponse.data);
+  };
+  const fetchSubCategoryProduct = async () => {
+    const response = await fetch(SummaryApi.getAllSubCategories.url);
+    const dataResponse = await response.json();
+    setSubCategoryProduct(dataResponse.data);
+  };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -35,18 +77,31 @@ const UploadProduct = ({ onClose, fetchData }) => {
   const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
     const uploadImageCloudinary = await uploadImage(file);
-
-    setData((preve) => {
-      return {
-        ...preve,
-        images: [...preve.images, uploadImageCloudinary.url],
-      };
-    });
+    if (data.images.length === 0) {
+      setData((preve) => {
+        return {
+          ...preve,
+          imageCover: file,
+          images: [...preve.images, file],
+        };
+      });
+      setImagesView((preve) => {
+        return [...preve, uploadImageCloudinary.url];
+      });
+    } else {
+      setData((preve) => {
+        return {
+          ...preve,
+          images: [...preve.images, file],
+        };
+      });
+      setImagesView((preve) => {
+        return [...preve, uploadImageCloudinary.url];
+      });
+    }
   };
 
   const handleDeleteimages = async (index) => {
-    console.log("image index", index);
-
     const newimages = [...data.images];
     newimages.splice(index, 1);
 
@@ -58,32 +113,35 @@ const UploadProduct = ({ onClose, fetchData }) => {
     });
   };
 
-  {
-    /**upload product */
-  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const response = await fetch(SummaryApi.uploadProduct.url, {
       method: SummaryApi.uploadProduct.method,
       headers: {
-        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: formData,
     });
 
     const responseData = await response.json();
 
     if (responseData.data) {
-      toast.success(responseData?.message);
+      toast.success("product added successful");
+      console.log(responseData.data);
       onClose();
-      fetchData();
+      setFetchAgain(true);
     }
 
-    if (responseData.error) {
-      toast.error(responseData?.message);
+    if (!responseData.data) {
+      console.log(responseData);
+      console.log(data);
+      toast.error("there are an error");
     }
   };
+  useEffect(() => {
+    fetchCategoryProduct();
+    fetchSubCategoryProduct();
+  }, []);
 
   return (
     <div className="fixed w-full  h-full bg-slate-200 bg-opacity-35 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
@@ -114,20 +172,6 @@ const UploadProduct = ({ onClose, fetchData }) => {
             required
           />
 
-          <label htmlFor="slug" className="mt-3">
-            Brand Name :
-          </label>
-          <input
-            type="text"
-            id="slug"
-            placeholder="enter brand name"
-            value={data.slug}
-            name="slug"
-            onChange={handleOnChange}
-            className="p-2 bg-slate-100 border rounded"
-            required
-          />
-
           <label htmlFor="category" className="mt-3">
             Category :
           </label>
@@ -139,10 +183,29 @@ const UploadProduct = ({ onClose, fetchData }) => {
             className="p-2 bg-slate-100 border rounded"
           >
             <option value={""}>Select Category</option>
-            {productCategory.map((el, index) => {
+            {categoryProduct.map((el, index) => {
               return (
-                <option value={el.value} key={el.value + index}>
-                  {el.label}
+                <option value={el?._id} key={el?._id}>
+                  {el?.name}
+                </option>
+              );
+            })}
+          </select>
+          <label htmlFor="subcategory" className="mt-3">
+            subcategory :
+          </label>
+          <select
+            required
+            value={data.subcategory}
+            name="subcategory"
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 border rounded"
+          >
+            <option value={""}>Select subCategory</option>
+            {subCategoryProduct.map((el, index) => {
+              return (
+                <option value={el?._id} key={el?._id}>
+                  {el?.name}
                 </option>
               );
             })}
@@ -168,11 +231,11 @@ const UploadProduct = ({ onClose, fetchData }) => {
             </div>
           </label>
           <div>
-            {data?.images[0] ? (
+            {imagesView[0] ? (
               <div className="flex items-center gap-2">
-                {data.images.map((el, index) => {
+                {imagesView.map((el, index) => {
                   return (
-                    <div className="relative group">
+                    <div key={index} className="relative group">
                       <img
                         src={el}
                         alt={el}
@@ -225,6 +288,32 @@ const UploadProduct = ({ onClose, fetchData }) => {
             placeholder="enter selling price"
             value={data.priceAfterDiscount}
             name="priceAfterDiscount"
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 border rounded"
+            required
+          />
+          <label htmlFor="quantity" className="mt-3">
+            quantity :
+          </label>
+          <input
+            type="number"
+            id="quantity"
+            placeholder="enter quantity"
+            value={data.quantity}
+            name="quantity"
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 border rounded"
+            required
+          />
+          <label htmlFor="sold" className="mt-3">
+            Sold :
+          </label>
+          <input
+            type="number"
+            id="sold"
+            placeholder="enter sold items"
+            value={data.sold}
+            name="sold"
             onChange={handleOnChange}
             className="p-2 bg-slate-100 border rounded"
             required

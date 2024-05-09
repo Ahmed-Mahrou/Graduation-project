@@ -5,7 +5,6 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import SummaryApi from "../common";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice";
 import ROLE from "../common/role";
@@ -22,24 +21,13 @@ const Header = () => {
   const searchQuery = URLSearch.getAll("keyword");
   const [search, setSearch] = useState(searchQuery);
 
-  const handleLogout = async () => {
-    const fetchData = await fetch(SummaryApi.logout_user.url, {
-      method: SummaryApi.logout_user.method,
-      credentials: "include",
-    });
-
-    const data = await fetchData.json();
-
-    if (data.success) {
-      toast.success(data.message);
-      dispatch(setUserDetails(null));
-      navigate("/");
-    }
-
-    if (data.error) {
-      toast.error(data.message);
-    }
-  };
+  // };
+  function handleLogout() {
+    context.setToken("");
+    toast.success("logout successfully");
+    dispatch(setUserDetails(null));
+    navigate("/");
+  }
 
   const handleSearch = (e) => {
     const { value } = e.target;
