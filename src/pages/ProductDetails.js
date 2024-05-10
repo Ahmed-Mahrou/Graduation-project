@@ -22,6 +22,10 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const imagesListLoading = new Array(4).fill(null);
   const [activeImage, setActiveImage] = useState("");
+  const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]); // State to store reviews
+  const [newReview, setNewReview] = useState(''); // State for the new review input
+  const [newUsername, setNewUsername] = useState('');
 
   const [zoomImageCoordinate, setZoomImageCoordinate] = useState({
     x: 0,
@@ -88,6 +92,23 @@ const ProductDetails = () => {
     await addToCart(e, id, token);
     fetchUserAddToCart();
     navigate("/cart");
+    
+  const handleReviewSubmit = () => {
+    if (newUsername.trim() && newReview.trim()) {
+      const review = {
+        id: reviews.length + 1,
+        username: newUsername,
+        text: newReview,
+        rating: rating,
+      };
+      setReviews([...reviews, review]);
+      setNewReview('');
+      setNewUsername('');
+      setRating(0);
+    } else {
+      // Handle the case where username or review is not provided
+      alert('Please enter both a username and a review.');
+    }
   };
 
   return (
@@ -226,6 +247,54 @@ const ProductDetails = () => {
             </div>
           </div>
         )}
+      </div>
+
+           {/* Review Section */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold">Customer Reviews</h3>
+        <div className="mt-4">
+        <input
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+            placeholder="Your username"
+            value={newUsername}
+            onChange={(e) => setNewUsername(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Write your review..."
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+          />
+          <div className="flex my-2">
+            {[...Array(5)].map((_, index) => (
+              <FaStar
+                key={index}
+                className={`cursor-pointer ${
+                  index < rating ? 'text-yellow-500' : 'text-gray-300'
+                }`}
+                onClick={() => setRating(index + 1)}
+              />
+            ))}
+          </div>
+          <button
+            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+            onClick={handleReviewSubmit}
+          >
+            Submit Review
+          </button>
+        </div>
+        <div className="mt-4">
+          {reviews.map((review) => (
+            <div key={review.id} className="p-4 border border-gray-300 rounded my-2">
+              <div className="flex">
+                {[...Array(review.rating)].map((_, index) => (
+                  <FaStar key={index} className="text-yellow-500" />
+                ))}
+              </div>
+              <p className="mt-2">{review.text}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* {data.category && (
