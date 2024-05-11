@@ -116,6 +116,20 @@ const SummaryApi = {
     url: "https://reca.azurewebsites.net/api/v1/orders",
     method: "post",
   },
+  allOrders: {
+    url: "https://reca.azurewebsites.net/api/v1/orders",
+    method: "get",
+  },
+  setIsDelivered: {
+    url: "https://reca.azurewebsites.net/api/v1/orders/",
+    url2: "/deliver",
+    method: "PUT",
+  },
+  setIsPaid: {
+    url: "https://reca.azurewebsites.net/api/v1/orders/",
+    url2: "/pay",
+    method: "PUT",
+  },
 };
 
 export default SummaryApi;

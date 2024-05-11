@@ -15,6 +15,7 @@ import SubCategoryProduct from "../pages/SubCategoryProduct";
 import Payment from "../pages/Payment";
 import AllCategories from "../pages/AllCategories";
 import AllSubCategories from "../pages/AllSubCategories";
+import AllOrders from "../pages/AllOrders";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
           {
             path: "all-subcategories",
             element: <AllSubCategories />,
+          },
+          {
+            path: "all-orders",
+            element: <AllOrders />,
           },
         ],
       },
