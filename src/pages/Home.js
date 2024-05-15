@@ -14,8 +14,6 @@ const Home = () => {
     setData(responseData?.data);
   };
 
-  console.log(data[0]);
-
   useEffect(() => {
     fetchSubCategory();
   }, []);

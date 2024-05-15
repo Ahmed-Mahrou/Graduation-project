@@ -13,18 +13,18 @@ import { setUserDetails } from "./store/userSlice";
 function App() {
   const dispatch = useDispatch();
   const [cartProductCount, setCartProductCount] = useState(0);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const fetchUserDetails = async (token) => {
+  const fetchUserDetails = async (token1 = token) => {
+    if (!token1) return;
     const dataResponse = await fetch(SummaryApi.current_user.url, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token1}`,
       },
     });
 
     const dataApi = await dataResponse.json();
-    console.log(dataApi);
 
     if (dataApi.data) {
       dispatch(setUserDetails(dataApi.data));
@@ -32,6 +32,8 @@ function App() {
   };
 
   const fetchUserAddToCart = async () => {
+    if (!token) return;
+    console.log(token);
     const dataResponse = await fetch(SummaryApi.addToCartProductView.url, {
       method: SummaryApi.addToCartProductView.method,
       headers: {

@@ -23,6 +23,7 @@ const Header = () => {
 
   // };
   function handleLogout() {
+    localStorage.removeItem("");
     context.setToken("");
     toast.success("logout successfully");
     dispatch(setUserDetails(null));
@@ -44,7 +45,7 @@ const Header = () => {
       <div className=" h-full container mx-auto flex items-center px-4 justify-between">
         <div className="">
           <Link to={"/"}>
-            <Logo w={90} h={50} />
+            <Logo />
           </Link>
         </div>
 
